@@ -8,7 +8,7 @@ import com.statoverflow.status.domain.quest.dto.response.SubQuestResponseDto;
 public interface SubQuestService {
 
 
-	List<SubQuestResponseDto> getSubQuests(List<Integer> attributes, Long mainQuest, Long userId);
+	List<SubQuestResponseDto> getSubQuests(Long mainQuest, Long userId);
 
 	List<SubQuestResponseDto> rerollSubQuestRequestDto(RerollSubQuestRequestDto dto, Long userId);
 }

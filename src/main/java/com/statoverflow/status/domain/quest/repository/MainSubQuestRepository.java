@@ -23,4 +23,6 @@ public interface MainSubQuestRepository extends JpaRepository<MainSubQuest, Main
 	);
 
 	MainSubQuest findByMainQuestIdAndSubQuestId(Long id, Long id1);
+
+	List<MainSubQuest> findAllByMainQuestId(Long mainQuestId);
 }

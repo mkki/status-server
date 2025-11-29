@@ -6,9 +6,9 @@ import com.statoverflow.status.domain.quest.dto.response.ThemeResponseDto;
 
 public interface ThemeService {
 
-	List<ThemeResponseDto> getThemes(List<Integer> attributes);
+	List<ThemeResponseDto> getThemes();
 
-	List<ThemeResponseDto> rerollThemes(List<Integer> attributes, List<Integer> themes);
+	List<ThemeResponseDto> rerollThemes(List<Integer> themes);
 
 
 }

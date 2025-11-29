@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.statoverflow.status.domain.attribute.repository.AttributeRepository;
+import com.statoverflow.status.domain.master.entity.Attribute;
 import com.statoverflow.status.domain.master.entity.QuestTheme;
 import com.statoverflow.status.domain.quest.dto.response.ThemeResponseDto;
 import com.statoverflow.status.domain.quest.service.interfaces.ThemeService;
@@ -27,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ThemeServiceImpl implements ThemeService {
 
+	private final AttributeRepository attributeRepository;
 	@Value("${status.quest.theme.output_theme_num}")
 	private int OUTPUT_THEME_NUM;
 
@@ -39,14 +42,19 @@ public class ThemeServiceImpl implements ThemeService {
 	 * @return 랜덤 선택된 테마 응답 DTO 목록
 	 */
 	@Override
-	public List<ThemeResponseDto> getThemes(List<Integer> attributes) {
-		log.info("테마 조회 시작 - 입력 속성: {}", attributes);
+	public List<ThemeResponseDto> getThemes() {
+
+		List<Integer> attributes = getAllAttributes();
 
 		List<ThemeResponseDto> candidateThemes = getCandidateThemes(attributes);
 		List<ThemeResponseDto> selectedThemes = selectRandomThemes(candidateThemes);
 
 		logFinalSelection("테마 조회", selectedThemes);
 		return selectedThemes;
+	}
+
+	private List<Integer> getAllAttributes() {
+		return attributeRepository.findAll().stream().map(Attribute::getId).collect(Collectors.toList());
 	}
 
 	/**
@@ -57,7 +65,10 @@ public class ThemeServiceImpl implements ThemeService {
 	 * @return 리롤된 테마 응답 DTO 목록
 	 */
 	@Override
-	public List<ThemeResponseDto> rerollThemes(List<Integer> attributes, List<Integer> themesToExclude) {
+	public List<ThemeResponseDto> rerollThemes(List<Integer> themesToExclude) {
+
+		List<Integer> attributes = getAllAttributes();
+
 		log.info("테마 리롤 시작 - 속성: {}, 제외할 테마: {}", attributes, themesToExclude);
 
 		List<ThemeResponseDto> candidateThemes = getCandidateThemes(attributes);
@@ -76,7 +87,7 @@ public class ThemeServiceImpl implements ThemeService {
 	 * @return 후보 테마 DTO 목록
 	 */
 	private List<ThemeResponseDto> getCandidateThemes(List<Integer> attributes) {
-		List<QuestTheme> matchingThemes = questUtil.getAllMatchingThemesByAttributes(attributes);
+		List<QuestTheme> matchingThemes = questUtil.getAllThemes();
 		log.info("속성 매칭 테마 조회 완료 - 총 {}개", matchingThemes.size());
 		log.debug("조회된 테마 ID: {}", this.extractIdsAtQuestTheme(matchingThemes));
 

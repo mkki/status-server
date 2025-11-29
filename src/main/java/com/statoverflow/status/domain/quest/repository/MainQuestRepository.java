@@ -11,5 +11,5 @@ public interface MainQuestRepository extends JpaRepository<MainQuest, Long> {
 	@Query("SELECT mq FROM MainQuest mq WHERE mq.theme.id = :themeId AND (BITAND(mq.linkedAttribute, :selectedAttributes) = :selectedAttributes)")
 	List<MainQuest> findAllByThemeIdAndAttributes(Long themeId, int selectedAttributes);
 
-
+	List<MainQuest> findAllByThemeId(Long themeId);
 }

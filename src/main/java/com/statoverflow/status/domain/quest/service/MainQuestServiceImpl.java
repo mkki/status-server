@@ -46,16 +46,15 @@ public class MainQuestServiceImpl implements MainQuestService {
 	/**
 	 * 사용자 조건에 맞는 메인 퀘스트 목록 조회
 	 *
-	 * @param attributes 선택된 속성 리스트
 	 * @param userId 사용자 ID
 	 * @param themeId 테마 ID
 	 * @return 추천 메인 퀘스트 목록
 	 */
 	@Override
-	public List<MainQuestResponseDto> getMainQuests(List<Integer> attributes, Long userId, Long themeId) {
-		log.info("메인 퀘스트 조회 시작 - userId: {}, themeId: {}, attributes: {}", userId, themeId, attributes);
+	public List<MainQuestResponseDto> getMainQuests(Long userId, Long themeId) {
+		log.info("메인 퀘스트 조회 시작 - userId: {}, themeId: {}, attributes: {}", userId, themeId);
 
-		List<MainQuestResponseDto> availableQuests = getAvailableMainQuests(attributes, userId, themeId);
+		List<MainQuestResponseDto> availableQuests = getAvailableMainQuests(userId, themeId);
 		List<MainQuestResponseDto> selectedQuests = questUtil.selectRandoms(availableQuests, OUTPUT_MAINQUEST_NUM);
 
 		log.info("메인 퀘스트 조회 완료 - 선택된 개수: {}", selectedQuests.size());
@@ -74,11 +73,11 @@ public class MainQuestServiceImpl implements MainQuestService {
 	 * @return 리롤된 메인 퀘스트 목록
 	 */
 	@Override
-	public List<MainQuestResponseDto> rerollMainQuests(List<Integer> attributes, List<Long> mainQuestsToExclude,
+	public List<MainQuestResponseDto> rerollMainQuests(List<Long> mainQuestsToExclude,
 		Long userId, Long themeId) {
 		log.info("메인 퀘스트 리롤 시작 - userId: {}, themeId: {}, 제외 개수: {}", userId, themeId, mainQuestsToExclude.size());
 
-		List<MainQuestResponseDto> availableQuests = getAvailableMainQuests(attributes, userId, themeId);
+		List<MainQuestResponseDto> availableQuests = getAvailableMainQuests(userId, themeId);
 		List<MainQuestResponseDto> rerolledQuests = processReroll(availableQuests, mainQuestsToExclude);
 
 		log.info("메인 퀘스트 리롤 완료 - 선택된 개수: {}", rerolledQuests.size());
@@ -92,9 +91,9 @@ public class MainQuestServiceImpl implements MainQuestService {
 	/**
 	 * 사용자가 선택 가능한 메인 퀘스트 목록 조회
 	 */
-	private List<MainQuestResponseDto> getAvailableMainQuests(List<Integer> attributes, Long userId, Long themeId) {
+	private List<MainQuestResponseDto> getAvailableMainQuests(Long userId, Long themeId) {
 		// 1. 조건에 맞는 모든 퀘스트 조회
-		List<MainQuest> candidateQuests = findCandidateMainQuests(attributes, themeId);
+		List<MainQuest> candidateQuests = mainQuestRepository.findAllByThemeId(themeId);
 
 		// 2. 진행 중인 퀘스트 제외
 		List<MainQuest> availableQuests = filterService.excludeUserActiveQuests(candidateQuests, userId);

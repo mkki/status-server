@@ -50,7 +50,7 @@ public class QuestUtil {
 	 * @throws CustomException 속성이 유효하지 않은 경우
 	 */
 	public int calculateCombinedBitmask(List<Integer> attributes) {
-		validateAttributes(attributes);
+		// validateAttributes(attributes);
 
 		int combinedBitmask = attributes.stream()
 			.mapToInt(this::getAttributeBitmask)
@@ -74,6 +74,11 @@ public class QuestUtil {
 
 		log.info("속성별 테마 조회 완료 - 조회된 테마 개수: {}", questThemes.size());
 		return questThemes;
+	}
+
+
+	public List<QuestTheme> getAllThemes() {
+		return themeRepository.findAll();
 	}
 
 	/**
@@ -162,4 +167,5 @@ public class QuestUtil {
 				return new CustomException(INVALID_ATTRIBUTES);
 			});
 	}
+
 }

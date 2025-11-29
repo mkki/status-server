@@ -48,17 +48,16 @@ public class SubQuestServiceImpl implements SubQuestService {
 	/**
 	 * 메인 퀘스트에 속한 서브 퀘스트 목록 조회
 	 *
-	 * @param attributes 선택된 속성 리스트
 	 * @param mainQuestId 메인 퀘스트 ID
 	 * @param userId 사용자 ID
 	 * @return 추천 서브 퀘스트 목록
 	 */
 	@Override
-	public List<SubQuestResponseDto> getSubQuests(List<Integer> attributes, Long mainQuestId, Long userId) {
-		log.info("서브 퀘스트 조회 시작 - mainQuestId: {}, userId: {}, attributes: {}",
-			mainQuestId, userId, attributes);
+	public List<SubQuestResponseDto> getSubQuests(Long mainQuestId, Long userId) {
+		log.info("서브 퀘스트 조회 시작 - mainQuestId: {}, userId: {}",
+			mainQuestId, userId);
 
-		List<SubQuestResponseDto> availableSubQuests = getAvailableSubQuests(attributes, mainQuestId, userId);
+		List<SubQuestResponseDto> availableSubQuests = getAvailableSubQuests(mainQuestId, userId);
 		List<SubQuestResponseDto> selectedSubQuests = questUtil.selectRandoms(availableSubQuests, OUTPUT_SUBQUEST_NUM);
 
 		log.info("서브 퀘스트 조회 완료 - 선택된 개수: {}", selectedSubQuests.size());
@@ -82,7 +81,7 @@ public class SubQuestServiceImpl implements SubQuestService {
 		validateRerollRequest(rerollRequest);
 
 		List<SubQuestResponseDto> availableSubQuests = getAvailableSubQuests(
-			rerollRequest.attributes(), rerollRequest.mainQuest(), userId);
+			rerollRequest.mainQuest(), userId);
 
 		List<SubQuestResponseDto> rerolledSubQuests = rerollProcessor.processReroll(
 			rerollRequest, availableSubQuests, OUTPUT_SUBQUEST_NUM);
@@ -98,9 +97,9 @@ public class SubQuestServiceImpl implements SubQuestService {
 	/**
 	 * 사용자가 선택 가능한 서브 퀘스트 목록 조회
 	 */
-	private List<SubQuestResponseDto> getAvailableSubQuests(List<Integer> attributes, Long mainQuestId, Long userId) {
+	private List<SubQuestResponseDto> getAvailableSubQuests(Long mainQuestId, Long userId) {
 		// 1. 조건에 맞는 서브 퀘스트 조회
-		List<MainSubQuest> availableSubQuests = findCandidateSubQuests(attributes, mainQuestId);
+		List<MainSubQuest> availableSubQuests = mainSubQuestRepository.findAllByMainQuestId(mainQuestId);
 
 		// 2. DTO 변환
 		List<SubQuestResponseDto> subQuestDtos = dtoConverter.convertToResponseDtos(availableSubQuests);

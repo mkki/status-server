@@ -52,46 +52,41 @@ public class QuestController {
 	@Operation(summary = "[퀘스트 생성 - 1] 랜덤 테마 목록 조회", description = "능력치 코드에 맞는 랜덤 테마 목록을 조회합니다.")
 	@GetMapping("/get-themes")
 	public ResponseEntity<ApiResponse<List<ThemeResponseDto>>> getThemes(
-		@Parameter(hidden = true) @CurrentUser BasicUsersDto user,
-		@Parameter(description = "능력치 코드 목록", required = true) @RequestParam List<Integer> attributes) {
-		return ApiResponse.ok(themeService.getThemes(attributes));
+		@Parameter(hidden = true) @CurrentUser BasicUsersDto user) {
+		return ApiResponse.ok(themeService.getThemes());
 	}
 
 	@Operation(summary = "[퀘스트 생성 - 2] 테마 목록 재요청", description = "현재 테마 목록을 제외한 테마 목록을 다시 조회합니다.")
 	@GetMapping("/reroll-themes")
 	public ResponseEntity<ApiResponse<List<ThemeResponseDto>>> rerollThemes(
 		@Parameter(hidden = true) @CurrentUser BasicUsersDto user,
-		@Parameter(description = "능력치 코드 목록", required = true) @RequestParam List<Integer> attributes,
 		@Parameter(description = "재요청할 테마 코드 목록", required = true) @RequestParam List<Integer> themes) {
-		return ApiResponse.ok(themeService.rerollThemes(attributes, themes));
+		return ApiResponse.ok(themeService.rerollThemes(themes));
 	}
 
 	@Operation(summary = "[퀘스트 생성 - 3] 메인 퀘스트 목록 조회", description = "선택된 테마에 맞는 메인 퀘스트 목록을 조회합니다.")
 	@GetMapping("/get-mainquests")
 	public ResponseEntity<ApiResponse<List<MainQuestResponseDto>>> getMainQuests(
 		@Parameter(hidden = true) @CurrentUser BasicUsersDto user,
-		@Parameter(description = "능력치 코드 목록", required = true) @RequestParam List<Integer> attributes,
 		@Parameter(description = "선택된 테마 코드", required = true) @RequestParam Long theme) {
-		return ApiResponse.ok(mainQuestService.getMainQuests(attributes, user.id(), theme));
+		return ApiResponse.ok(mainQuestService.getMainQuests(user.id(), theme));
 	}
 
 	@Operation(summary = "[퀘스트 생성 - 4] 메인 퀘스트 목록 재요청", description = "선택된 테마에 맞는 메인 퀘스트 목록을 다시 조회합니다.")
 	@GetMapping("/reroll-mainquests")
 	public ResponseEntity<ApiResponse<List<MainQuestResponseDto>>> rerollMainQuests(
 		@Parameter(hidden = true) @CurrentUser BasicUsersDto user,
-		@Parameter(description = "능력치 코드 목록", required = true) @RequestParam List<Integer> attributes,
 		@Parameter(description = "선택된 테마 코드", required = true) @RequestParam Long theme,
 		@Parameter(description = "재요청할 메인 퀘스트 코드 목록", required = true) @RequestParam List<Long> mainQuests) {
-		return ApiResponse.ok(mainQuestService.rerollMainQuests(attributes, mainQuests, user.id(), theme));
+		return ApiResponse.ok(mainQuestService.rerollMainQuests(mainQuests, user.id(), theme));
 	}
 
 	@Operation(summary = "[퀘스트 생성 - 5] 서브 퀘스트 목록 조회", description = "선택된 메인 퀘스트에 맞는 서브 퀘스트 목록을 조회합니다.")
 	@GetMapping("/get-subquests")
 	public ResponseEntity<ApiResponse<List<SubQuestResponseDto>>> getSubQuests(
 		@Parameter(hidden = true) @CurrentUser BasicUsersDto user,
-		@Parameter(description = "능력치 코드 목록", required = true) @RequestParam List<Integer> attributes,
 		@Parameter(description = "선택된 메인 퀘스트 코드", required = true) @RequestParam Long mainQuest) {
-		return ApiResponse.ok(subQuestService.getSubQuests(attributes, mainQuest, user.id()));
+		return ApiResponse.ok(subQuestService.getSubQuests(mainQuest, user.id()));
 	}
 
 	@Operation(summary = "[퀘스트 생성 - 6] 서브 퀘스트 목록 재요청", description = "선택된 서브 퀘스트 목록을 재요청하여 새로 받습니다.")
