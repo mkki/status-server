@@ -2,8 +2,6 @@ package com.statoverflow.status.domain.quest.controller;
 
 import java.util.List;
 
-import com.statoverflow.status.domain.quest.dto.WithStatus;
-import com.statoverflow.status.domain.quest.dto.response.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +13,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.statoverflow.status.domain.attribute.dto.AttributeDto;
 import com.statoverflow.status.domain.quest.dto.SubQuestLogDto;
+import com.statoverflow.status.domain.quest.dto.WithStatus;
 import com.statoverflow.status.domain.quest.dto.request.CreateQuestRequestDto;
 import com.statoverflow.status.domain.quest.dto.request.RerollSubQuestRequestDto;
+import com.statoverflow.status.domain.quest.dto.response.CreateQuestResponseDto;
+import com.statoverflow.status.domain.quest.dto.response.MainQuestResponseDto;
+import com.statoverflow.status.domain.quest.dto.response.QuestHistoryByDateDto;
+import com.statoverflow.status.domain.quest.dto.response.RewardResponseDto;
+import com.statoverflow.status.domain.quest.dto.response.SubQuestResponseDto;
+import com.statoverflow.status.domain.quest.dto.response.ThemeResponseDto;
+import com.statoverflow.status.domain.quest.dto.response.UserQuestStatisticsDto;
+import com.statoverflow.status.domain.quest.dto.response.UsersMainQuestResponseDto;
 import com.statoverflow.status.domain.quest.service.interfaces.MainQuestService;
 import com.statoverflow.status.domain.quest.service.interfaces.SubQuestService;
 import com.statoverflow.status.domain.quest.service.interfaces.ThemeService;
@@ -31,7 +37,6 @@ import com.statoverflow.status.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -107,6 +112,7 @@ public class QuestController {
 		return ApiResponse.ok(usersMainQuestService.create(dto, user.id()));
 	}
 
+	@Deprecated
 	@Operation(summary = "[퀘스트 조회 - 1] 오늘의 서브 퀘스트 조회", description = "오늘 인증 할 수 있는 모든 서브 퀘스트를 조회합니다.")
 	@GetMapping("/today")
 	public ResponseEntity<ApiResponse<List<SubQuestResponseDto.UsersSubQuestResponseDto>>> getTodaySubQuests(
@@ -114,6 +120,7 @@ public class QuestController {
 		return ApiResponse.ok(usersSubQuestService.getTodaySubQuests(user.id()));
 	}
 
+	@Deprecated
 	@Operation(summary = "[퀘스트 상세 조회 - 1] 메인 퀘스트 ID로 서브 퀘스트 조회", description = "특정 메인 퀘스트에 속한 인증할 수 있는 서브 퀘스트를 조회합니다.")
 	@GetMapping("/{id}/today")
 	public ResponseEntity<ApiResponse<List<SubQuestResponseDto.UsersSubQuestResponseDto>>> getTodaySubQuestsByMainQuestId(
@@ -122,6 +129,7 @@ public class QuestController {
 		return ApiResponse.ok(usersSubQuestService.getTodaySubQuests(user.id(), id));
 	}
 
+	@Deprecated
 	@Operation(summary = "메인 퀘스트 삭제", description = "특정 메인 퀘스트를 삭제합니다.")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ApiResponse<?>> deleteMainQuest(
@@ -131,6 +139,7 @@ public class QuestController {
 		return ApiResponse.noContent();
 	}
 
+	@Deprecated
 	@Operation(summary = "[퀘스트 조회 - 2]나의 메인 퀘스트 목록 조회", description = "현재 유저가 진행 중인 모든 메인 퀘스트를 조회합니다.")
 	@GetMapping("/me")
 	public ResponseEntity<ApiResponse<List<UsersMainQuestResponseDto>>> getUsersMainQuests(
@@ -138,6 +147,7 @@ public class QuestController {
 		return ApiResponse.ok(usersMainQuestService.getUsersMainQuests(user.id()));
 	}
 
+	@Deprecated
 	@Operation(summary = "[퀘스트 상세 조회 - 2] 메인 퀘스트 ID로 서브 퀘스트 완료 기록 조회", description = "특정 메인 퀘스트에 속한 모든 서브 퀘스트 완료 기록을 조회합니다.")
 	@GetMapping("/{id}/history")
 	public ResponseEntity<ApiResponse<List<QuestHistoryByDateDto>>> getSubQuestsLogsByMainQuestId(
@@ -146,6 +156,7 @@ public class QuestController {
 		return ApiResponse.ok(usersSubQuestService.getSubQuestsLogs(user.id(), id));
 	}
 
+	@Deprecated
 	@Operation(summary = "서브 퀘스트 완료", description = "서브 퀘스트를 완료 처리하고 경험치를 부여합니다.")
 	@PostMapping("/sub")
 	public ResponseEntity<ApiResponse<RewardResponseDto>> doSubQuest(
@@ -155,6 +166,7 @@ public class QuestController {
 		return ApiResponse.created(usersSubQuestService.doSubQuest(user.id(), dto));
 	}
 
+	@Deprecated
 	@Operation(summary = "서브 퀘스트 완료 기록 수정", description = "서브 퀘스트 완료 기록을 수정합니다.")
 	@PatchMapping("/sub")
 	public ResponseEntity<ApiResponse<SubQuestLogDto>> editSubQuest(
@@ -164,6 +176,7 @@ public class QuestController {
 		return ApiResponse.ok(usersSubQuestService.editSubQuest(user.id(), dto));
 	}
 
+	@Deprecated
 	@Operation(summary = "[퀘스트 조회 - 3] 메인 퀘스트 ID로 메인 퀘스트 정보 조회", description = "특정 메인 퀘스트에 대한 정보를 조회합니다.")
 	@GetMapping("/{id}")
 	public ResponseEntity<ApiResponse<WithStatus<UsersMainQuestResponseDto>>> getUsersMainQuestById(
@@ -172,12 +185,14 @@ public class QuestController {
 		return ApiResponse.ok(usersMainQuestService.getUsersMainQuestById(user.id(), id));
 	}
 
+	@Deprecated
 	@Operation(summary = "누적 기록 보기", description = "완료한 퀘스트의 데이터를 총합하여 누적 기록을 출력합니다.")
 	@GetMapping("/user-statistics")
 	public ResponseEntity<ApiResponse<UserQuestStatisticsDto>> getUserStatics(@CurrentUser BasicUsersDto user) {
 		return ApiResponse.ok(usersMainQuestService.getUserStatistics(user.id()));
 	}
 
+	@Deprecated
 	@Operation(summary = "완료한 메인 퀘스트 보기", description = "완료한 메인퀘스트를 ‘완료일 기준 최근 순’으로 상단부터 하단 방향으로 출력합니다.")
 	@GetMapping("/history")
 	public ResponseEntity<ApiResponse<List<WithStatus<UsersMainQuestResponseDto>>>> getUsersMainQuestHistory(@CurrentUser BasicUsersDto user) {
