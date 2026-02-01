@@ -92,14 +92,12 @@ public class JwtService {
             .path("/")
             .sameSite("None")
             .maxAge(0)
-            .domain(".statoverflow.cloud")
             .build();
         ResponseCookie cookie2 = ResponseCookie.from(name, "")
             .httpOnly(isHttpOnly)
             .secure(true)
             .path("/")
             .maxAge(0)
-            .domain(".statoverflow.cloud")
             .build();
         ResponseCookie cookie3 = ResponseCookie.from(name, "")
             .httpOnly(isHttpOnly)
