@@ -9,6 +9,9 @@ build/
 *.json
 *.yml
 *.p8
+*.log
+logs/
+dump.rdb
 
 ### STS ###
 .apt_generated
@@ -40,3 +43,4 @@ out/
 
 ### VS Code ###
 .vscode/
+
