@@ -68,6 +68,7 @@ jobs:
           script: |
             sudo find /tmp/build/libs -name "*-SNAPSHOT.jar" ! -name "*-plain.jar" -exec mv {} /opt/status-server/app.jar \;
             sudo chown ubuntu:ubuntu /opt/status-server/app.jar
+            sudo systemctl daemon-reload
             sudo systemctl start status-server
             sleep 3
             sudo systemctl status status-server --no-pager
