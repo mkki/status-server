@@ -44,6 +44,9 @@ public class KakaoOAuthClient {
 	@Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
 	private String kakaoUserInfoUri;
 
+	@Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
+	private String kakaoClientSecret;
+
 	/**
 	 * 카카오 인가 코드를 사용하여 액세스 토큰 및 리프레시 토큰을 카카오로부터 발급받습니다.
 	 *
@@ -62,6 +65,7 @@ public class KakaoOAuthClient {
 		params.add("grant_type", "authorization_code");
 		params.add("client_id", kakaoClientId);
 		params.add("redirect_uri", kakaoRedirectUri);
+		params.add("client_secret", kakaoClientSecret);
 		params.add("code", code);
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
