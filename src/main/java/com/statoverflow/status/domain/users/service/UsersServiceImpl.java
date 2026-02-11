@@ -120,6 +120,16 @@ public class UsersServiceImpl implements UsersService{
 	public BasicUsersDto signUp(SignUpRequestDto req) {
 
 		log.debug("회원가입 시작, req: {}", req);
+
+		// 중복 가입 방지
+		usersRepository.findByProviderTypeAndProviderId(
+			req.provider().providerType(), req.provider().providerId()
+		).ifPresent(existingUser -> {
+			log.warn("이미 가입된 사용자 시도: provider={}, providerId={}", 
+				req.provider().providerType(), req.provider().providerId());
+			throw new CustomException(ErrorType.SOCIAL_ALREADY_CONNECTED);
+		});
+
 		Users user = req.toEntity();
 
 		// 닉네임에 고유  Tag 생성
@@ -128,7 +138,7 @@ public class UsersServiceImpl implements UsersService{
 		user.setTag(tag);
 
 		usersRepository.save(user);
-	
+
 		// 모든 마스터 Attribute에 대해 초기 UsersAttributeProgress 생성 및 저장
 		initializeUserAttributes(user);
 
