@@ -55,7 +55,8 @@ public class TokenService {
 			.httpOnly(isHttpOnly)
 			.secure(true)
 			.path("/")
-			.sameSite("None")
+			.domain(".devmkki.cloud")
+			.sameSite("Lax")
 			.maxAge(Duration.ofSeconds(maxAge))
 			.build();
 	}

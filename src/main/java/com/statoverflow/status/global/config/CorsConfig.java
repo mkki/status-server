@@ -20,7 +20,7 @@ public class CorsConfig implements WebMvcConfigurer {
 		configuration.setAllowedOriginPatterns(
 			List.of("http://localhost:5500",
 				"http://localhost:5173",
-				"https://status-front.duckdns.org",
+				"https://app.devmkki.cloud",
 				"http://localhost:8080",
 				"https://appleid.apple.com"));
 		// 허용 메서드 지정
