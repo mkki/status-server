@@ -21,6 +21,7 @@ public class CorsConfig implements WebMvcConfigurer {
 			List.of("http://localhost:5500",
 				"http://localhost:5173",
 				"https://app.devmkki.cloud",
+				"https://dev-app.devmkki.cloud",
 				"http://localhost:8080",
 				"https://appleid.apple.com"));
 		// 허용 메서드 지정
