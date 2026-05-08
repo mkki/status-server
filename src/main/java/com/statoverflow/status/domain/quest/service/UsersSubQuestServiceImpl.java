@@ -134,7 +134,7 @@ public class UsersSubQuestServiceImpl implements UsersSubQuestService {
 		UsersSubQuestLog log = findSubQuestLogById(logDto.id());
 		updateSubQuestLog(log, logDto);
 
-		return new SubQuestLogDto(log.getId(), log.getDifficulty(), log.getMemo());
+		return new SubQuestLogDto(log.getId(), log.getDifficulty(), log.getMemo(), log.getImageUrls());
 	}
 
 	// ==================== Private Helper Methods ====================
@@ -265,7 +265,7 @@ public class UsersSubQuestServiceImpl implements UsersSubQuestService {
 	private QuestHistoryByDateDto.SubQuestLogsResponseDto convertToSubQuestLogResponseDto(UsersSubQuestLog log) {
 		UsersSubQuest subQuest = log.getUsersSubQuest();
 		SubQuestResponseDto.UsersSubQuestResponseDto subQuestDto = convertToUsersSubQuestResponseDto(subQuest);
-		SubQuestLogDto logDto = new SubQuestLogDto(log.getId(), log.getDifficulty(), log.getMemo());
+		SubQuestLogDto logDto = new SubQuestLogDto(log.getId(), log.getDifficulty(), log.getMemo(), log.getImageUrls());
 
 		return new QuestHistoryByDateDto.SubQuestLogsResponseDto(subQuestDto, logDto);
 	}
@@ -278,6 +278,7 @@ public class UsersSubQuestServiceImpl implements UsersSubQuestService {
 			.usersSubQuest(subQuest)
 			.difficulty(logDto.difficulty())
 			.memo(logDto.memo())
+			.imageUrls(logDto.imageUrls() != null ? logDto.imageUrls() : new ArrayList<>())
 			.build();
 
 		usersSubQuestLogRepository.save(subQuestLog);
@@ -304,6 +305,9 @@ public class UsersSubQuestServiceImpl implements UsersSubQuestService {
 		}
 		if (dto.memo() != null) {
 			log.setMemo(dto.memo());
+		}
+		if (dto.imageUrls() != null) {
+			log.setImageUrls(dto.imageUrls());
 		}
 	}
 

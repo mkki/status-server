@@ -1,6 +1,8 @@
 package com.statoverflow.status.domain.quest.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -8,7 +10,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.statoverflow.status.domain.quest.enums.DifficultyType;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
@@ -60,5 +64,12 @@ public class UsersSubQuestLog {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private DifficultyType difficulty;
+
+	@Setter
+	@Builder.Default
+	@ElementCollection(fetch = FetchType.LAZY)
+	@CollectionTable(name = "users_sub_quest_log_image_urls", joinColumns = @JoinColumn(name = "log_id"))
+	@Column(name = "image_url")
+	private List<String> imageUrls = new ArrayList<>();
 
 }
