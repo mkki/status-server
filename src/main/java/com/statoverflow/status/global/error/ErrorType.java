@@ -32,7 +32,12 @@ public enum ErrorType {
     INVALID_SUBQUEST_SELECTED(HttpStatus.BAD_REQUEST, "05-001", "선택된 서브퀘스트의 갯수가 잘못되었습니다."),
     COMPLETED_SUBQUEST(HttpStatus.BAD_REQUEST, "05-002", "이미 완료한 서브퀘스트 입니다."),
     SUBQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "05-003", "해당하는 서브 퀘스트가 존재하지 않습니다."),
-    SUBQUESTLOG_NOT_FOUND(HttpStatus.NOT_FOUND, "05-004", "해당하는 서브 퀘스트 완료 내역이 존재하지 않습니다."),;
+    SUBQUESTLOG_NOT_FOUND(HttpStatus.NOT_FOUND, "05-004", "해당하는 서브 퀘스트 완료 내역이 존재하지 않습니다."),
+
+    // 업로드 에러 (06)
+    UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "06-001", "파일 업로드에 실패했습니다."),
+    INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST, "06-002", "이미지 파일만 업로드할 수 있습니다."),
+    INVALID_FILE_COUNT(HttpStatus.BAD_REQUEST, "06-003", "이미지는 최대 5개까지 업로드할 수 있습니다.");
 
     private final HttpStatus status;
     private final String errorCode;
